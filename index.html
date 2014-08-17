@@ -1,0 +1,75 @@
+<!doctype html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MAT | Welcome</title>
+    <link rel="stylesheet" href="css/foundation.css" />
+    <link rel="stylesheet" href="css/mat.css" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+
+    <script src="js/vendor/modernizr.js"></script>
+  </head>
+  <body>
+        
+    <div class="row">
+      <div class="large-12 ">
+      <div id="logo" class="text-center"><a href="#"><img src="img/logo.png"></a></div>
+      <div id="message" class="text-center alert hide"></div>
+        <div class=" text-center">
+            <div class="large-12 text-left ">
+                <div class="menu">
+                    <div class="select"><span class="caret-down"></span> <input id="category" type="text" placeholder="Add a category" > </div>
+                    <ul id="menu-category" class="sub-menu hide">
+                    </ul>
+                </div>
+            </div>
+            <div class="large-11 left">
+              <label>
+                <input type="text" id="task" placeholder="Add a task" />                
+              </label>
+            </div>
+            <div class="large-1 left">
+                <button id="addTask"></button>
+            </div>
+        </div>
+        <div class=" text-center">
+            <button id="start" class="">START/PAUSE</button>
+            <button id="stop" class="">STOP</button>
+        </div>
+        </div>
+        <div class="large-12 " class="text-center">
+            <div id="timer" class="text-center">              
+            <span id="hour"></span>
+            <span id="min"></span>
+            <span id="sec"></span>
+            </div>
+        </div>
+        <hr>
+        <div class="large-12 " class="text-center">
+            <h1 class="text-center">Todo list</h1>
+            <ul id="list">
+                    
+            </ul>
+        </div>
+        <div class="save-btn text-center">
+            <button id="save">SAVE</button>
+            <button id="delete">DELETE ALL</button>
+        </div>
+      </div>    
+    </div>
+    <footer>
+        <p class="text-center">2014 &copy; Antoine Martin & <a href="http://cssauthor.com">cssauthor.com</a> for RED UI & <a href="https://dribbble.com/shots/1079999-Thin-Stroke-Icons?list=searches&tag=flat_icon">Thin Stroke Icons</a> by Victor Erixon for logo clock</p>
+        <p class="text-center">Built with  &hearts; with <a href="http://foundation.zurb.com/">foundation</a> & <a href="http://jquery.com//">JQuery</a></p>
+    </footer>
+
+
+    
+    <script src="js/vendor/jquery.js"></script>
+    <script src="js/foundation.min.js"></script>
+    <script src="js/vendor/mat.js"></script>
+    <script>
+      $(document).foundation();
+    </script>
+  </body>
+</html>
