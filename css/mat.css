@@ -47,7 +47,7 @@ button:hover,button:focus{
 	background-color: #e07272;
 }
 
-#timer span {
+#timer {
 	font-size: 26px;
 }
 
@@ -171,4 +171,8 @@ footer{
 
 footer a{
 	color:#f3a1a1;
+}
+
+footer a:hover{
+	color:#e07272;
 }

@@ -1,7 +1,8 @@
-# Matimer
-- # Timer with a clock
+# Matimer is a Timer with a clock
 
-In order to track time of my current task, I created this little reminder with a clock. There is so much more to add and to lint :)
+In order to track time of my current task, I created this little reminder with a clock. 
+
+:)
 
 ## Installation
 
