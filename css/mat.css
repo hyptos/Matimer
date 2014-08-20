@@ -1,3 +1,5 @@
+/*****  body   *****/
+
 body,h1,h2,h3{
 	background-color: #f78181;
 	font-family: 'Open Sans', sans-serif;
@@ -33,12 +35,6 @@ input:focus{
 
 }
 
-.alert{
-	background-color: #fff;
-	color: #909090;
-	padding: 10px;
-}
-
 label{
 	font-size:26px;
 }
@@ -47,16 +43,12 @@ button:hover,button:focus{
 	background-color: #e07272;
 }
 
-#timer {
-	font-size: 26px;
-}
-
-#timer{
-	margin-bottom: 30px;
-}
-
 ul{
 	margin:0;
+}
+
+hr{
+	border:1px solid #fff !important;
 }
 
 ul li,select{
@@ -73,10 +65,6 @@ ul li,select{
 	transition:.5s;
 }
 
-#list li{
-	border-left:10px solid #f3a1a1;
-	margin-bottom: 5px;
-}
 
 ul li:hover{
 	border-left:10px solid #f3a1a1;
@@ -85,6 +73,32 @@ ul li:hover{
 a,a:hover,a:focus,input:focus {
 	color:#909090;
 	outline: 0;
+}
+
+/*****  rules for dom   *****/
+
+.alert{
+	background-color: #fff;
+	color: #909090;
+	padding: 10px;
+}
+
+#timer {
+	font-size: 26px;
+	margin-bottom: 30px;
+}
+
+
+#list li{
+	border-left:10px solid #f3a1a1;
+	margin-bottom: 5px;
+	border-bottom:0;
+}
+
+#list li a:hover {
+	background-color:#fff;
+	color:#f3a1a1;
+	cursor: pointer;
 }
 
 .select{
@@ -161,12 +175,15 @@ span.caret-up{
 	background: url(../img/arrow-hover.png) no-repeat;
 }
 
+/*****  footer   *****/
+
 footer{
 	background-color: #fff;
 	color:#909090;
 	padding:10px;
 	padding-top:30px;
 	margin-top: 30px;
+	margin-bottom: 30px;
 }
 
 footer a{

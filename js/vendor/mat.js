@@ -15,7 +15,7 @@ var started = 0, elapsedTime = new Date();
         return "MAT-" + Foundation.utils.random_str(6);
     }
     //saves an item to localStorage
-    var saveReminder = function (id, content) {
+    function saveReminder (id, content) {
         localStorage.setItem(id, content);
     };
 
@@ -25,8 +25,10 @@ var started = 0, elapsedTime = new Date();
         document.getElementById("list").innerHTML += "<li id=" +
              id + " class='saved hide'><span class='task'>" +
              task.task + "</span><span class='timeConsumed'> " +
+             '<span class="listHour">' +
+             task.timeHour + '</span><span class="listMin">' + task.timeMin + '</span><span class="listSec">' +  task.timeSec + 
              task.timestamp + '</span> <span class="label">' +
-             task.label + '</span><a href="#" class="close right">&times;</a></li>';
+             task.label + '</span><div class="large-3 controls text-center right"><div class="controls"><a class="left edit" href="#">edit</a><a href="#" class="close right">&times;</a></div></div></li>';
     }
 
     //load all the reminders from the browser storage
@@ -65,18 +67,22 @@ var started = 0, elapsedTime = new Date();
 
     //after enter save a new element
     $('#task').on('keyup', function (e) {
+        var timeSec = "", timeMin = "", timeHour = "";
         if (e.which === 13) {
             e.preventDefault();
 
             var task = document.getElementById("task").value, label = "", timeConsumed = "", randomStr = "";
 
             label = $("#category").val();
-            timeConsumed = document.getElementById("timer").innerHTML;
+            timeSec = document.getElementById("sec").innerHTML;
+            timeMin = document.getElementById("min").innerHTML;
+            timeHour = document.getElementById("hour").innerHTML;
             randomStr = generateId();
             document.getElementById("list").innerHTML += "<li id=" + randomStr + " class='hide'><span class='task'>" +
-                task + " </span><span class='timeConsumed'> " +
-                timeConsumed + '</span> <span class="label">' +
-                label + '</span><a href="#" class="close right">&times;</a>' + "</li>";
+                task + " </span>" 
+                + '<span class="listHour">' +
+                timeHour + '</span><span class="listMin">' + timeMin + '</span><span class="listSec">' +  timeSec + '</span><span class="label">' +
+                label + '</span><div class="large-3 controls text-center right"><a class="left edit" href="#">edit</a><a href="#" class="close right">&times;</a></div></li>';
             $(".hide").last().fadeIn("fast");
             $("#task").val('');
         }
@@ -99,6 +105,45 @@ var started = 0, elapsedTime = new Date();
         e.preventDefault();
     });
 
+    $(document).on("click", "a.done", function (e) {
+        var liContainer = $(this).parent().parent();
+        var task = {};
+        task.id = $(liContainer).attr('id');
+        task.state = "running";
+        task.task = liContainer.find('.task').text();
+        task.sec = liContainer.find('.listSec').text();
+        task.min = liContainer.find('.listMin').text();
+        task.hour = liContainer.find('.listHour').text();
+        task.label = liContainer.find('.label').text();
+        if (liContainer.find('.timeConsumed').text() !== "undefined") {
+            task.timestamp = liContainer.find('.timeConsumed').text();
+        } else {
+            task.timestamp = "00:00:00";
+        }
+        saveReminder(task.id, JSON.stringify(task));
+        liContainer.find('.controls').find('.done').remove();
+        liContainer.css('border-left','solid 10px #5cb85c');
+        e.preventDefault();
+    });
+
+    $(document).on("click", "a.edit", function (e) {
+
+        var liContainer = $(this).parent().parent();
+
+        liContainer.find('.task').attr("contentEditable","true");
+        liContainer.addClass("current");
+        liContainer.css('border-left','solid 10px #f0ad4e');
+
+        if (liContainer.find('.controls').find('.done').length === 0 ) {
+            liContainer.find('.controls').append("<a class='done' href='#'>Done</a>");
+        } else {
+            liContainer.find('.controls').find('.done').remove();
+            liContainer.css('border-left','solid 10px #f3a1a1');
+        }
+
+        e.preventDefault();
+    });
+
     //save a reminder on click the button save
     $(document).on("click", "#save", function (e) {
         if ($('#list li').length !== 0) {
@@ -107,6 +152,7 @@ var started = 0, elapsedTime = new Date();
                 var task = {};
                 task.id = $(value).attr('id');
                 task.key = key;
+                task.state = "running";
                 task.task = value.getElementsByClassName('task')[0].innerHTML;
                 task.label = value.getElementsByClassName('label')[0].innerHTML;
                 if (value.getElementsByClassName('timeConsumed')[0].innerHTML !== "undefined") {
@@ -127,7 +173,7 @@ var started = 0, elapsedTime = new Date();
 
     function timer() {
 
-        var clock = "";
+        var clock, liContainer = $("#list");
 
         if (running === 0) {
             running = 1;
@@ -156,30 +202,50 @@ var started = 0, elapsedTime = new Date();
             }
 
             //Prettify the clock
-            if (hour === 0) {
-                clock += "00 : ";
-            } else {
-                clock += ("0" + hour).slice(-2) + " : ";
-            }
-            if (min === 0) {
-                clock += "00 : ";
-            } else {
-                clock += ("0" + min).slice(-2) + " : ";
-            }
-            if (sec === 0) {
-                clock += "00";
-            } else {
-                clock += ("0" + sec).slice(-2);
-            }
+            clock = prettyClock(hour,min,sec);
 
-            document.getElementById('timer').innerHTML = clock;
 
+            if (liContainer.find('.controls').find('.done').length > 0 ) {
+                $(".current").find('.listHour').text(clock.hour);
+                $(".current").find('.listMin').text(clock.min);
+                $(".current").find('.listSec').text(clock.sec);
+            } else {
+                document.getElementById('hour').innerHTML = clock.hour;
+                document.getElementById('min').innerHTML = clock.min;
+                document.getElementById('sec').innerHTML = clock.sec;
+            }            
         }
 
         compte = setTimeout(function () {
             timer();
         }, 1000); //launch the timer
 
+    }
+
+    function prettyClock(hour,min,sec){
+        var secStr = "", minStr = "", hourStr = "";
+        if (hour === 0) {
+            hourStr += "00 : ";
+        } else {
+            hourStr += ("0" + hour).slice(-2) + " : ";
+        }
+        if (min === 0) {
+            minStr += "00 : ";
+        } else {
+            minStr += ("0" + min).slice(-2) + " : ";
+        }
+        if (sec === 0) {
+            secStr += "00";
+        } else {
+            secStr += ("0" + sec).slice(-2);
+        }
+
+        var clockStr = {}
+        clockStr.sec = secStr
+        clockStr.min = minStr
+        clockStr.hour = hourStr
+
+        return clockStr;
     }
 
     function stop() {
@@ -227,12 +293,10 @@ var started = 0, elapsedTime = new Date();
             $("#message").fadeIn();
         } else {
             var task = document.getElementById("task").value, hour = "", min = "", sec = "", label = "", timeConsumed = "", randomStr = "";
-            hour = document.getElementById("hour").innerHTML;
-            min = document.getElementById("min").innerHTML;
-            sec = document.getElementById("sec").innerHTML;
+
 
             label = $("#category").val();
-            timeConsumed = hour + min + sec;
+            timeConsumed = document.getElementById("timer").innerHTML;
             randomStr = generateId();
             document.getElementById("list").innerHTML += "<li id=" + randomStr + " class='hide'><span class='task'>" +
                 task + " </span><span class='timeConsumed'> " +
@@ -259,8 +323,8 @@ var started = 0, elapsedTime = new Date();
     //delete an item in the reminder
     $(document).on("click", "a.close", function (e) {
         e.preventDefault();
-        deleteReminder($(this).parent().attr("id"));
-        $(this).parent().fadeOut("slow", function () {
+        deleteReminder($(this).parent().parent().attr("id"));
+        $(this).parent().parent().fadeOut("slow", function () {
             $(this).remove();
         });
     });
