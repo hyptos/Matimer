@@ -21,14 +21,20 @@ var started = 0, elapsedTime = new Date();
 
     //create the saved list of reminders
     function createReminder(id, content) {
-        var task = jQuery.parseJSON(content);
-        document.getElementById("list").innerHTML += "<li id=" +
-             id + " class='saved hide'><span class='task'>" +
-             task.task + "</span><span class='timeConsumed'> " +
+        var task = jQuery.parseJSON(content),content = "", contentLabel = "", contentTask = "";
+        if(task.label != ""){
+            contentLabel = '<span class="label">' + task.label + '</span>';
+        }
+        if(task.task != ""){            
+            contentTask = '<span class="task">' + task.task + ' </span>';
+        }
+
+        document.getElementById("list").innerHTML +=  "<li id=" +
+             id + " class='saved hide'>" +
+             contentTask + 
              '<span class="listHour">' +
-             task.timeHour + '</span><span class="listMin">' + task.timeMin + '</span><span class="listSec">' +  task.timeSec + 
-             task.timestamp + '</span> <span class="label">' +
-             task.label + '</span><div class="large-3 controls text-center right"><div class="controls"><a class="left edit" href="#">edit</a><a href="#" class="close right">&times;</a></div></div></li>';
+             task.timeHour + '</span><span class="listMin">' + task.timeMin + '</span><span class="listSec">' +  task.timeSec 
+             + '</span>' + contentLabel + '<div class="large-3 controls text-center right"><a class="left edit" href="#">edit</a><a href="#" class="close right">&times;</a></div></li>';
     }
 
     //load all the reminders from the browser storage
@@ -71,18 +77,17 @@ var started = 0, elapsedTime = new Date();
         if (e.which === 13) {
             e.preventDefault();
 
-            var task = document.getElementById("task").value, label = "", timeConsumed = "", randomStr = "";
+            var content = {}, randomStr = "";
 
-            label = $("#category").val();
-            timeSec = document.getElementById("sec").innerHTML;
-            timeMin = document.getElementById("min").innerHTML;
-            timeHour = document.getElementById("hour").innerHTML;
             randomStr = generateId();
-            document.getElementById("list").innerHTML += "<li id=" + randomStr + " class='hide'><span class='task'>" +
-                task + " </span>" 
-                + '<span class="listHour">' +
-                timeHour + '</span><span class="listMin">' + timeMin + '</span><span class="listSec">' +  timeSec + '</span><span class="label">' +
-                label + '</span><div class="large-3 controls text-center right"><a class="left edit" href="#">edit</a><a href="#" class="close right">&times;</a></div></li>';
+
+            content.timeHour = document.getElementById("hour").innerHTML;
+            content.timeMin = document.getElementById("min").innerHTML;
+            content.timeSec = document.getElementById("sec").innerHTML;
+            content.label = $("#category").val();
+            content.task = document.getElementById("task").value;
+
+            createReminder(randomStr,JSON.stringify(content));
             $(".hide").last().fadeIn("fast");
             $("#task").val('');
         }
@@ -287,21 +292,26 @@ var started = 0, elapsedTime = new Date();
 
     $('#addTask').click("on", function (e) {
         e.preventDefault();
+        var timeSec,timeMin,timeHour;
 
         if ($("#task").val() === "") {
             document.getElementById('message').innerHTML = "You must add a new task before adding it ! <a class='close-notification right' href='#'>&times;</a>";
             $("#message").fadeIn();
         } else {
-            var task = document.getElementById("task").value, hour = "", min = "", sec = "", label = "", timeConsumed = "", randomStr = "";
+            var randomStr = "";
 
-
-            label = $("#category").val();
-            timeConsumed = document.getElementById("timer").innerHTML;
             randomStr = generateId();
-            document.getElementById("list").innerHTML += "<li id=" + randomStr + " class='hide'><span class='task'>" +
-                task + " </span><span class='timeConsumed'> " +
-                timeConsumed + '</span> <span class="label">' +
-                label + '</span><a href="#" class="close right">&times;</a>' + "</li>";
+            
+            var content = {}, randomStr = "";
+
+            content.timeHour = document.getElementById("hour").innerHTML;
+            content.timeMin = document.getElementById("min").innerHTML;
+            content.timeSec = document.getElementById("sec").innerHTML;
+            content.label = $("#category").val();
+            content.task = document.getElementById("task").value;
+
+            createReminder(randomStr,JSON.stringify(content));
+
             $(".hide").last().fadeIn("fast");
             $("#task").val('');
         }
