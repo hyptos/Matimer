@@ -2,8 +2,6 @@
 
 In order to track time of my current task, I created this little reminder with a clock. 
 
-:)
-
 ## Demo
 
    ```
@@ -12,9 +10,8 @@ In order to track time of my current task, I created this little reminder with a
 
 ## Todo
 
-1. Edit of tasks => Add old time to current time.
-2. Lint JS + minify css/js.
-3. Grab a coffe
+Lint JS + minify css/js.
+Clean and add comments.
  
 ## Installation
 
