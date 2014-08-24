@@ -25,10 +25,11 @@ var started = 0, elapsedTime = new Date();
         if(task.label != ""){
             contentLabel = '<span class="label">' + task.label + '</span>';
         }
-        if(task.task != ""){            
+        if(task.task !== "") {            
             contentTask = '<span class="task">' + task.task + ' </span>';
+        } else {            
+            document.getElementById('message').innerHTML = "You must add a new task before adding it ! <a class='close-notification right' href='#'>&times;</a>";
         }
-
         document.getElementById("list").innerHTML +=  "<li id=" +
              id + " class='saved hide'>" +
              contentTask + 
@@ -98,8 +99,7 @@ var started = 0, elapsedTime = new Date();
         if (e.which === 13) {
             e.preventDefault();
             var category = document.getElementById("category").value;
-            document.getElementById("menu-category").innerHTML += "<li class='hide'><a class='category-choice' href='#'>" + category + "</a></li>";
-            $("#menu-category > li.hide").last().fadeIn("slow");
+            document.getElementById("menu-category").innerHTML += "<li ><a class='category-choice' href='#'>" + category + "</a></li>";
             $("#category").val('');
         }
     });
@@ -115,10 +115,11 @@ var started = 0, elapsedTime = new Date();
         var task = {};
         task.id = $(liContainer).attr('id');
         task.state = "running";
+        console.log(liContainer.find('.listSec').text())
         task.task = liContainer.find('.task').text();
-        task.sec = liContainer.find('.listSec').text();
-        task.min = liContainer.find('.listMin').text();
-        task.hour = liContainer.find('.listHour').text();
+        task.timeSec = liContainer.find('.listSec').text();
+        task.timeMin = liContainer.find('.listMin').text();
+        task.timeHour = liContainer.find('.listHour').text();
         task.label = liContainer.find('.label').text();
         if (liContainer.find('.timeConsumed').text() !== "undefined") {
             task.timestamp = liContainer.find('.timeConsumed').text();
@@ -141,9 +142,12 @@ var started = 0, elapsedTime = new Date();
 
         if (liContainer.find('.controls').find('.done').length === 0 ) {
             liContainer.find('.controls').append("<a class='done' href='#'>Done</a>");
+            liContainer.addClass("add");
         } else {
             liContainer.find('.controls').find('.done').remove();
             liContainer.css('border-left','solid 10px #f3a1a1');
+            liContainer.removeClass("add");
+            liContainer.find('.task').attr("contentEditable","false");
         }
 
         e.preventDefault();
@@ -151,6 +155,7 @@ var started = 0, elapsedTime = new Date();
 
     //save a reminder on click the button save
     $(document).on("click", "#save", function (e) {
+        var test;
         if ($('#list li').length !== 0) {
             e.preventDefault();
             $.each($('#list li'), function (key, value) {
@@ -159,9 +164,17 @@ var started = 0, elapsedTime = new Date();
                 task.key = key;
                 task.state = "running";
                 task.task = value.getElementsByClassName('task')[0].innerHTML;
-                task.label = value.getElementsByClassName('label')[0].innerHTML;
-                if (value.getElementsByClassName('timeConsumed')[0].innerHTML !== "undefined") {
-                    task.timestamp = value.getElementsByClassName('timeConsumed')[0].innerHTML;
+                test = value.getElementsByClassName('label')[0].innerHTML;
+                if(test.length != 0){
+                    task.label = value.getElementsByClassName('label')[0].innerHTML;
+                } else {
+                    task.label = "";
+                }
+                console.log(value.getElementById('hour')[0].innerHTML);
+                if (value.getElementById('hour')[0].innerHTML !== "undefined") {
+                    task.hour = value.getElementById('hour')[0].innerHTML;
+                    task.min = value.getElementById('min')[0].innerHTML;
+                    task.sec = value.getElementById('sec')[0].innerHTML;
                 } else {
                     task.timestamp = "00:00:00";
                 }
@@ -185,10 +198,8 @@ var started = 0, elapsedTime = new Date();
             started = new Date();
         }
 
-
         if (pause === 0) {
             sec = sec + 1;
-
             //If we stopped the timer
             if (timerStop === 1) {
                 timerStop = 0;
@@ -209,11 +220,26 @@ var started = 0, elapsedTime = new Date();
             //Prettify the clock
             clock = prettyClock(hour,min,sec);
 
-
+            //we are editing the current task
             if (liContainer.find('.controls').find('.done').length > 0 ) {
+                //add old timestamp to current one
+               if($(".current").find('.listHour').text() != "") {
+                    var s,m,h;
+                    h = $(".current").find('.listHour').text();
+                    m = $(".current").find('.listMin').text();
+                    s = $(".current").find('.listSec').text();
+                    if($(".current.add").length != 0) {
+                        $(".current").removeClass("add");
+                        hour = parseInt(h) + hour;
+                        min = parseInt(m) + min;
+                        sec = parseInt(s) + sec;                            
+                    }
+                } 
+                   
                 $(".current").find('.listHour').text(clock.hour);
                 $(".current").find('.listMin').text(clock.min);
                 $(".current").find('.listSec').text(clock.sec);
+                
             } else {
                 document.getElementById('hour').innerHTML = clock.hour;
                 document.getElementById('min').innerHTML = clock.min;
