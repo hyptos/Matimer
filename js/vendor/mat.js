@@ -115,7 +115,6 @@ var started = 0, elapsedTime = new Date();
         var task = {};
         task.id = $(liContainer).attr('id');
         task.state = "running";
-        console.log(liContainer.find('.listSec').text())
         task.task = liContainer.find('.task').text();
         task.timeSec = liContainer.find('.listSec').text();
         task.timeMin = liContainer.find('.listMin').text();
@@ -151,42 +150,6 @@ var started = 0, elapsedTime = new Date();
         }
 
         e.preventDefault();
-    });
-
-    //save a reminder on click the button save
-    $(document).on("click", "#save", function (e) {
-        var test;
-        if ($('#list li').length !== 0) {
-            e.preventDefault();
-            $.each($('#list li'), function (key, value) {
-                var task = {};
-                task.id = $(value).attr('id');
-                task.key = key;
-                task.state = "running";
-                task.task = value.getElementsByClassName('task')[0].innerHTML;
-                test = value.getElementsByClassName('label')[0].innerHTML;
-                if(test.length != 0){
-                    task.label = value.getElementsByClassName('label')[0].innerHTML;
-                } else {
-                    task.label = "";
-                }
-                console.log(value.getElementById('hour')[0].innerHTML);
-                if (value.getElementById('hour')[0].innerHTML !== "undefined") {
-                    task.hour = value.getElementById('hour')[0].innerHTML;
-                    task.min = value.getElementById('min')[0].innerHTML;
-                    task.sec = value.getElementById('sec')[0].innerHTML;
-                } else {
-                    task.timestamp = "00:00:00";
-                }
-                saveReminder(task.id, JSON.stringify(task));
-                document.getElementById('message').innerHTML = "Lists is saved ! <a class='close-notification right' href='#'>&times;</a>";
-                $("#message").fadeIn();
-
-            });
-        } else {
-            document.getElementById('message').innerHTML = "You have to add new tasks in order to save them ! <a class='close-notification right' href='#'>&times;</a>";
-            $("#message").fadeIn();
-        }
     });
 
     function timer() {
