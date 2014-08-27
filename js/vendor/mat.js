@@ -174,9 +174,9 @@ var started = 0, elapsedTime = new Date();
             if (sec >= 59) {
                 sec = 0;
                 min = min + 1;
-            }
-            if (hour >= 24) {
-                hour = 0;
+            }            
+            if (min >= 59) {
+                min = 0;
                 hour = hour + 1;
             }
 
